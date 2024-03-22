@@ -1,0 +1,121 @@
+Question 1
+#!/bin/bash
+
+# Prompt for input
+echo "Enter employee name: "
+read employee_name
+echo "Enter hours worked: "
+read hours_worked
+echo "Enter rate per hour: "
+read rate_per_hour
+
+# Calculate basic pay
+basic_pay=$(echo "$hours_worked * $rate_per_hour" | bc)
+
+# Calculate tax
+if [ $(echo "$basic_pay > 70000" | bc) -eq 1 ]; then
+    tax=$(echo "$basic_pay * 0.25" | bc)
+elif [ $(echo "$basic_pay >= 15000" | bc) -eq 1 ]; then
+    tax=$(echo "$basic_pay * 0.15" | bc)
+else
+    tax=0
+fi
+
+# Calculate net pay
+net_pay=$(echo "$basic_pay - $tax" | bc)
+
+# Display results
+echo "Employee Name: $employee_name"
+echo "Basic Pay: $basic_pay"
+echo "Tax: $tax"
+echo "Net Pay: $net_pay"
+
+
+
+question 2
+# Prompt for input
+echo "Enter Customer ID:"
+read CustomerID
+echo "Enter Customer Name:"
+read CustomerName
+echo "Enter Units Consumed:"
+read UnitConsumed
+
+# Initialize bill to 0
+Bill=0
+
+# Calculate charges based on units consumed
+if [ $UnitConsumed -le 199 ]; then
+    Bill=$(echo "$UnitConsumed * 120" | bc)
+elif [ $UnitConsumed -ge 200 ] && [ $UnitConsumed -lt 400 ]; then
+    Bill=$(echo "$UnitConsumed * 150" | bc)
+elif [ $UnitConsumed -ge 400 ] && [ $UnitConsumed -lt 600 ]; then
+    Bill=$(echo "$UnitConsumed * 180" | bc)
+else
+    Bill=$(echo "$UnitConsumed * 200" | bc)
+fi
+
+# Display the bill
+echo "Customer ID: $CustomerID"
+echo "Customer Name: $CustomerName"
+echo "Units Consumed: $UnitConsumed"
+echo "Total Bill: Ksh $Bill"
+
+
+question 3
+#include <stdio.h>      // Include the standard I/O library for input and output operations
+#include <unistd.h>     // Include the POSIX operating system API for access to POSIX system call API
+#include <fcntl.h>      // Include the file control options for file descriptor manipulation functions
+
+int main() {
+    int fileDescriptor; // Declare an integer to store the file descriptor
+    ssize_t numBytes;  // Declare a variable to store the number of bytes written/read
+
+    // Open the file with the specified name in write-only mode, create it if it doesn't exist, set its permissions to 0644
+    fileDescriptor = open("example.txt", O_WRONLY | O_CREAT, 0644);
+    
+    if (fileDescriptor < 0) { // Check if opening the file failed
+        perror("open"); // Use perror to print the error message related to the last system call
+        return 1;       // Exit the program with a status code indicating failure
+    }
+
+    // Write the string "Hello World" to the file and store the number of bytes written
+    numBytes = write(fileDescriptor, "Hello World", 11);
+
+    if (numBytes < 0) { // Check if the write operation failed
+        perror("write"); // Print the error message related to the write system call
+        return 1;        // Exit the program with a status code indicating failure
+    }
+
+    // Close the file after writing
+    close(fileDescriptor);
+
+    // Re-open the file in read-only mode to read the contents back
+    fileDescriptor = open("example.txt", O_RDONLY);
+    
+    if (fileDescriptor < 0) { // Check if re-opening the file failed
+        perror("open"); // Print the error message related to the open system call
+        return 1;       // Exit the program with a status code indicating failure
+    }
+
+    char buffer[100]; // Declare a buffer to store the read content
+
+    // Read up to 100 bytes from the file into the buffer
+    numBytes = read(fileDescriptor, buffer, 100);
+
+    if (numBytes < 0) { // Check if the read operation failed
+        perror("read"); // Print the error message related to the read system call
+        return 1;       // Exit the program with a status code indicating failure
+    }
+
+    // Null-terminate the string read from the file
+    buffer[numBytes] = '\0';
+
+    // Print the content read from the file to the standard output
+    printf("Read from file: %s\n", buffer);
+
+    // Close the file
+    close(fileDescriptor);
+
+    return 0; // Exit the program with a status code indicating success
+}
